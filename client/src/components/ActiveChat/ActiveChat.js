@@ -22,15 +22,14 @@ const useStyles = makeStyles(() => ({
 
 const ActiveChat = props => {
   const classes = useStyles();
-  const { user, conversations, activeConversation } = props;
-  const conversation = (conversations && conversations.find(conversation => conversation.otherUser.username === activeConversation)) || {};
+  const { user, conversation, messages } = props;
   return (
     <Box className={classes.root}>
-      {conversation.otherUser && (
+      {conversation && conversation.otherUser && (
         <>
           <Header username={conversation.otherUser.username} online={conversation.otherUser.online || false} />
           <Box className={classes.chatContainer}>
-            <Messages messages={conversation.messages} otherUser={conversation.otherUser} userId={user.id} />
+            <Messages messages={messages} otherUser={conversation.otherUser} userId={user.id} />
             <Input otherUser={conversation.otherUser} conversationId={conversation.id} user={user} />
           </Box>
         </>
@@ -39,11 +38,29 @@ const ActiveChat = props => {
   );
 };
 
+const selectMessages = state => {
+  const messages = (
+    state.conversations &&
+    state.conversations.find(
+      (conversation) => conversation.otherUser.username === state.activeConversation
+    ) &&
+    state.conversations.find(
+      (conversation) => conversation.otherUser.username === state.activeConversation
+    ).messages
+  )
+  messages && messages.sort((a, b) => a.id - b.id);
+  return messages;
+}
+
 const mapStateToProps = state => {
   return {
     user: state.user,
-    conversations: state.conversations,
-    activeConversation: state.activeConversation
+    conversation: 
+      state.conversations && 
+      state.conversations.find(
+        (conversation) => conversation.otherUser.username === state.activeConversation
+      ),
+    messages: selectMessages(state)
   };
 };
 
