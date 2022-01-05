@@ -22,14 +22,14 @@ const useStyles = makeStyles(() => ({
 
 const ActiveChat = props => {
   const classes = useStyles();
-  const { user, conversation, messages } = props;
+  const { user, conversation } = props;
   return (
     <Box className={classes.root}>
       {conversation && conversation.otherUser && (
         <>
           <Header username={conversation.otherUser.username} online={conversation.otherUser.online || false} />
           <Box className={classes.chatContainer}>
-            <Messages messages={messages} otherUser={conversation.otherUser} userId={user.id} />
+            <Messages messages={conversation.messages} otherUser={conversation.otherUser} userId={user.id} />
             <Input otherUser={conversation.otherUser} conversationId={conversation.id} user={user} />
           </Box>
         </>
@@ -37,20 +37,6 @@ const ActiveChat = props => {
     </Box>
   );
 };
-
-const selectMessages = state => {
-  const messages = (
-    state.conversations &&
-    state.conversations.find(
-      (conversation) => conversation.otherUser.username === state.activeConversation
-    ) &&
-    state.conversations.find(
-      (conversation) => conversation.otherUser.username === state.activeConversation
-    ).messages
-  )
-  messages && messages.sort((a, b) => a.id - b.id);
-  return messages;
-}
 
 const mapStateToProps = state => {
   return {
@@ -60,7 +46,6 @@ const mapStateToProps = state => {
       state.conversations.find(
         (conversation) => conversation.otherUser.username === state.activeConversation
       ),
-    messages: selectMessages(state)
   };
 };
 
