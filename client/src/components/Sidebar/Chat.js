@@ -16,6 +16,15 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       cursor: "grab"
     }
+  },
+  unreadCount: {
+    backgroundColor: '#3f92ff',
+    borderRadius: '100%',
+    width: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    color: '#ffffff',
   }
 }));
 
@@ -37,6 +46,7 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
+      <Box className={classes.unreadCount}>{conversation.unreadMessageCount > 0 && conversation.unreadMessageCount}</Box>
     </Box>
   );
 };
