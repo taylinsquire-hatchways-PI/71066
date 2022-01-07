@@ -47,7 +47,6 @@ router.get("/", async (req, res, next) => {
       ],
     });
 
-    conversations.reverse();
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
