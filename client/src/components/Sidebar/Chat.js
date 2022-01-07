@@ -64,8 +64,8 @@ const mapDispatchToProps = (dispatch) => {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
     },
-    markMessagesAsRead: (conversation) => {
-      dispatch(markMessagesAsRead(conversation))
+    markMessagesAsRead: (body) => {
+      dispatch(markMessagesAsRead(body))
     }
   };
 };
