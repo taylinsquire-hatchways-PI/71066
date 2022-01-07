@@ -7,7 +7,8 @@ export const addMessageToStore = (state, payload) => {
       otherUser: sender,
       messages: [message],
     };
-    if (message.senderId !== state.user.id) {
+    console.log(payload, state);
+    if (message.senderId === newConvo.otherUser.id) {
       newConvo.unreadMessageCount = 1;
     }
     newConvo.latestMessageText = message.text;
