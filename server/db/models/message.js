@@ -10,6 +10,10 @@ const Message = db.define("message", {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
+  recipients: {
+    type: Sequelize.JSON,
+    allowNull: false,
+  }
 });
 
 module.exports = Message;
