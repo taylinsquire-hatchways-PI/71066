@@ -7,7 +7,6 @@ export const addMessageToStore = (state, payload) => {
       otherUser: sender,
       messages: [message],
     };
-    console.log(payload, state);
     if (message.senderId === newConvo.otherUser.id) {
       newConvo.unreadMessageCount = 1;
     }
@@ -16,7 +15,6 @@ export const addMessageToStore = (state, payload) => {
   }
 
   return state.map((convo) => {
-    console.log(payload);
     if (convo.id === message.conversationId) {
       const convoCopy = { ...convo };
       convoCopy.messages = [...convo.messages, message];
