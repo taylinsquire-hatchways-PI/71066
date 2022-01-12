@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box } from "@material-ui/core";
+import Badge from "@material-ui/core/Badge";
 import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { makeStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
@@ -19,20 +20,29 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   unreadCount: {
-    backgroundColor: '#3f92ff',
-    borderRadius: '100%',
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: "100%",
     width: 20,
-    display: 'flex',
-    justifyContent: 'center',
-    fontWeight: 'bold',
-    color: '#ffffff',
-  }
+    display: "flex",
+    justifyContent: "center",
+    fontWeight: "bold",
+    color: "#ffffff",
+  },
 }));
 
 const Chat = (props) => {
   const classes = useStyles();
-  const { conversation } = props;
+  const { conversation, activeConversation } = props;
   const { otherUser } = conversation;
+
+  useEffect(() => {
+    if (
+      conversation.unreadMessageCount > 0 &&
+      activeConversation === otherUser.username
+    ) {
+      props.markMessagesAsRead({ conversationId: conversation.id, otherUser });
+    }
+  }, [conversation.unreadMessageCount]);
 
   const handleClick = async (conversation) => {
     if (conversation.id) {
@@ -54,7 +64,9 @@ const Chat = (props) => {
         sidebar={true}
       />
       <ChatContent conversation={conversation} />
-      <Box className={classes.unreadCount}>{conversation.unreadMessageCount > 0 && conversation.unreadMessageCount}</Box>
+      <Badge color="primary" className={classes.unreadCount}>
+        {conversation.unreadMessageCount > 0 && conversation.unreadMessageCount}
+      </Badge>
     </Box>
   );
 };
@@ -65,8 +77,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(setActiveChat(id));
     },
     markMessagesAsRead: (body) => {
-      dispatch(markMessagesAsRead(body))
-    }
+      dispatch(markMessagesAsRead(body));
+    },
   };
 };
 
