@@ -87,10 +87,21 @@ export const addNewConvoToStore = (state, recipientId, message) => {
   });
 };
 
-export const markConvoAsRead = (state, conversationId) => {
+export const markConvoAsRead = (state, payload) => {
+  const { conversationId, otherUser } = payload;
   return state.map((convo) => {
     if (convo.id === conversationId) {
       const convoCopy = { ...convo };
+      if (otherUser) {
+        const lastReadIndex = convo.messages.findIndex((message) => message.id === convoCopy.lastRead);
+        const newMessages = convo.messages.slice(lastReadIndex);
+        for (let i = 0; i < newMessages.length; i++) {
+          if (newMessages[i].senderId === otherUser.id) {
+            convoCopy.lastReadId = newMessages[i].id;
+          }
+        }
+        return convoCopy;
+      }
       convoCopy.unreadMessageCount = 0;
       return convoCopy;
     } else {
