@@ -47,7 +47,13 @@ router.post("/", async (req, res, next) => {
 
 router.put("/", async (req, res, next) => {
   try {
-    const messages = await Message.update(
+    if (!req.user) {
+      return res.sendStatus(401);
+    }
+    if (req.user.id === req.body.otherUser.id) {
+      return res.sendStatus(403);
+    }
+    await Message.update(
       {hasBeenRead: true},
       {where: { 
         [Op.and] : [
@@ -57,7 +63,7 @@ router.put("/", async (req, res, next) => {
         ] 
       }}
     )
-    return res.json(messages);
+    return res.sendStatus(204);
   } catch (error) {
     next(error)
   }
